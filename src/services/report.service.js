@@ -43,13 +43,15 @@ exports.generateCSV = async (id) => {
   const rows = data.map(item => {
     const u = item.user || {};
     const e = item.exchange || {};
-    return [
+    const values = [
       item.status,
       item.reason,
       u.transaction_id || u.id || "", u.timestamp || "", u.type || "", u.asset || "", u.quantity || "",
       e.transaction_id || e.id || "", e.timestamp || "", e.type || "", e.asset || "", e.quantity || ""
-    ].join(",");
+    ];
+    // Basic CSV escaping: wrap in quotes and escape internal quotes
+    return values.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",");
   });
 
-  return [headers.join(","), ...rows].join("\n");
+  return [headers.map(h => `"${h}"`).join(","), ...rows].join("\n");
 };

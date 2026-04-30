@@ -42,7 +42,7 @@ npm run dev
 
 ---
 
-##  API Documentation
+## 🚀 API Documentation
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
@@ -53,7 +53,7 @@ npm run dev
 
 ---
 
-##  Key Design Decisions & Assumptions
+## 🧠 Key Design Decisions & Assumptions
 
 During development, several technical decisions were made to handle unclear or messy requirements:
 

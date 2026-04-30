@@ -7,8 +7,8 @@ exports.reconcile = async (req, res) => {
   try {
     const runId = uuid();
     const config = {
-      time: parseInt(req.body?.time || process.env.TIMESTAMP_TOLERANCE_SECONDS || 300),
-      qty: parseFloat(req.body?.qty || process.env.QUANTITY_TOLERANCE_PCT || 0.01)
+      time: req.body?.time !== undefined ? parseInt(req.body.time) : parseInt(process.env.TIMESTAMP_TOLERANCE_SECONDS || 300),
+      qty: req.body?.qty !== undefined ? parseFloat(req.body.qty) : parseFloat(process.env.QUANTITY_TOLERANCE_PCT || 0.01)
     };
 
     // 1. Ingestion (Saves to DB)
@@ -19,11 +19,9 @@ exports.reconcile = async (req, res) => {
     const results = await match.run(runId, config);
 
     // 3. Save Report
-    // We'll use the generated uuid as the internal ID for simplicity or just save it.
-    // The reportService.save returns the MongoDB _id, but we'll include runId in data.
-    const dbId = await reportService.save(results);
+    const reportId = await reportService.save(results);
 
-    res.json({ message: "Reconciliation triggered", runId: dbId });
+    res.json({ message: "Reconciliation triggered", reportId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Reconciliation failed" });

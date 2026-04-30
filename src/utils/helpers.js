@@ -29,12 +29,12 @@ function mapType(type) {
 }
 
 exports.isMatch = (u, e, config) => {
+  if (u.asset !== e.asset || u.type !== e.type) return false;
+
   const timeDiff = Math.abs(u.timestamp - e.timestamp) / 1000;
-  const qtyDiffPct = Math.abs(u.quantity - e.quantity) / e.quantity * 100;
+  const qtyDiffPct = Math.abs(u.quantity - e.quantity) / (e.quantity || 1) * 100;
   
   return (
-    u.asset === e.asset &&
-    u.type === e.type &&
     timeDiff <= config.time &&
     qtyDiffPct <= config.qty
   );

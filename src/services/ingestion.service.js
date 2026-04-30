@@ -23,6 +23,12 @@ exports.loadCSV = (file, runId, source) => {
         }
 
         const normalized = normalize(row);
+        const quantity = isNaN(normalized.quantity) ? 0 : normalized.quantity;
+
+        if (isNaN(normalized.quantity)) {
+          isValid = false;
+          error = error ? error + " / Invalid quantity" : "Invalid quantity";
+        }
 
         const tx = new Transaction({
           runId,
@@ -32,7 +38,7 @@ exports.loadCSV = (file, runId, source) => {
           type: normalized.type,
           asset: row.asset,
           normalizedAsset: normalized.asset,
-          quantity: normalized.quantity,
+          quantity: quantity,
           originalData: row,
           isValid,
           validationError: error
